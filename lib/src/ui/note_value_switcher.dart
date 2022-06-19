@@ -6,7 +6,7 @@ import 'package:flutter_metronome/src/ui/note_value_switcher_modal.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class NoteValueSwitcher extends StatelessWidget {
-  final Function(NoteValue) onChangeNoteValue;
+  final void Function(NoteValue) onChangeNoteValue;
 
   const NoteValueSwitcher({super.key, required this.onChangeNoteValue});
 

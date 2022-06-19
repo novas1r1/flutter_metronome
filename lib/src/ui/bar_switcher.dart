@@ -5,7 +5,7 @@ import 'package:flutter_metronome/src/data/models/bar.dart';
 import 'package:flutter_metronome/src/ui/bar_switcher_modal.dart';
 
 class BarSwitcher extends StatelessWidget {
-  final Function(Bar) onChangeBar;
+  final void Function(Bar) onChangeBar;
 
   const BarSwitcher({
     super.key,

@@ -3,7 +3,7 @@ import 'package:flutter_metronome/src/data/models/bar.dart';
 import 'package:flutter_metronome/src/utils/metronome_config.dart';
 
 class BarSwitcherModal extends StatefulWidget {
-  final Function(Bar) onCloseDialog;
+  final void Function(Bar) onCloseDialog;
   final Bar? initialBar;
 
   const BarSwitcherModal({
@@ -17,8 +17,6 @@ class BarSwitcherModal extends StatefulWidget {
 }
 
 class _BarSwitcherModalState extends State<BarSwitcherModal> {
-  late List<Bar> _bars;
-
   late Bar _currentBar;
 
   @override
@@ -44,19 +42,20 @@ class _BarSwitcherModalState extends State<BarSwitcherModal> {
               crossAxisCount: 4,
               padding: const EdgeInsets.all(16),
               children: List.generate(
-                _bars.length,
+                MetronomeConfig.AVAILABLE_BARS.length,
                 (index) => GestureDetector(
                   onTap: () => _setCurrentBar(index, context),
                   child: Center(
                     child: Container(
                       padding: const EdgeInsets.all(4),
-                      color: _currentBar == _bars[index]
-                          ? Colors.blue.shade500
-                          : Colors.blue.shade900,
+                      color:
+                          _currentBar == MetronomeConfig.AVAILABLE_BARS[index]
+                              ? Colors.blue.shade500
+                              : Colors.blue.shade900,
                       child: Padding(
                         padding: const EdgeInsets.all(8),
                         child: Text(
-                          '${_bars[index].noteCountPerBar}/${_bars[index].noteValue.asInt()}',
+                          '${MetronomeConfig.AVAILABLE_BARS[index].noteCountPerBar}/${MetronomeConfig.AVAILABLE_BARS[index].noteValue.asInt()}',
                         ),
                       ),
                     ),
@@ -71,7 +70,7 @@ class _BarSwitcherModalState extends State<BarSwitcherModal> {
   }
 
   void _setCurrentBar(int index, BuildContext context) {
-    _currentBar = _bars[index];
+    _currentBar = MetronomeConfig.AVAILABLE_BARS[index];
     widget.onCloseDialog(_currentBar);
     Navigator.of(context).pop();
   }

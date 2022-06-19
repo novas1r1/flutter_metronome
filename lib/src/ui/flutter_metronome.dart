@@ -9,7 +9,7 @@ import 'package:flutter_metronome/src/utils/metronome_config.dart';
 
 class FlutterMetronome extends StatelessWidget {
   final int initialBpm;
-  final Function(int) onChangeBpm;
+  final void Function(int) onChangeBpm;
   final Color color;
 
   const FlutterMetronome({
@@ -40,7 +40,7 @@ class FlutterMetronome extends StatelessWidget {
 
 class _FlutterMetronomeView extends StatefulWidget {
   final int initialBpm;
-  final Function(int) onChangeBpm;
+  final void Function(int) onChangeBpm;
   final Color color;
 
   const _FlutterMetronomeView({
