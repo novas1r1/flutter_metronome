@@ -1,0 +1,7 @@
+include: package:very_good_analysis/analysis_options.3.0.1.yaml
+
+linter:
+  rules:
+    public_member_api_docs: false
+    sort_constructors_first: false
+    constant_identifier_names: false
