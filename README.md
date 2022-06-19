@@ -14,6 +14,8 @@ A Metronome built in Flutter
 Metronom sound by https://freesound.org/people/unfa
 
 # TODO
+- fix lagging metronome
 - make sound files replacable
 - remove flutter_svg from packages
+- add documentation and disable rule in analysis_option
 

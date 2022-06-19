@@ -4,8 +4,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_metronome/src/data/models/bar.dart';
 import 'package:soundpool/soundpool.dart';
 
-const SOUND_METRONOME_ELECTRIC = 'assets/default_metronome.wav';
-const SOUND_METRONOME_ELECTRIC_UP = 'assets/default_metronome_up.wav';
+// const SOUND_METRONOME_ELECTRIC = 'assets/default_metronome.wav';
+// const SOUND_METRONOME_ELECTRIC_UP = 'assets/default_metronome_up.wav';
+const SOUND_METRONOME_ELECTRIC =
+    'packages/flutter_metronome/assets/sounds/default_metronome.wav';
+const SOUND_METRONOME_ELECTRIC_UP =
+    'packages/flutter_metronome/assets/sounds/default_metronome_up.wav';
 
 class MetronomeRepository {
   late final Soundpool _soundpool;
