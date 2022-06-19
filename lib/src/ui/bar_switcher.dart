@@ -1,8 +1,8 @@
-import 'package:drumbitious_mvp/core/ui/drumbitious_styles.dart';
-import 'package:drumbitious_mvp/core/widgets/metronome/metronome.dart';
-import 'package:drumbitious_mvp/data/models/bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_metronome/src/cubits/metronome_cubit.dart';
+import 'package:flutter_metronome/src/data/models/bar.dart';
+import 'package:flutter_metronome/src/ui/bar_switcher_modal.dart';
 
 class BarSwitcher extends StatelessWidget {
   final Function(Bar) onChangeBar;
@@ -31,7 +31,6 @@ class BarSwitcher extends StatelessWidget {
         ),
         child: Text(
           '${state.noteCountPerBar}/${state.noteValue.asInt()}',
-          style: DrumbitiousStyles.h15,
         ),
       ),
     );

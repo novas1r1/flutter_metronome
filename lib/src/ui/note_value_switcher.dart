@@ -1,11 +1,9 @@
-import 'package:drumbitious_mvp/core/ui/svg_icon.dart';
-import 'package:drumbitious_mvp/core/widgets/metronome/metronome.dart';
-import 'package:drumbitious_mvp/data/models/bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_metronome/src/cubits/metronome_cubit.dart';
 import 'package:flutter_metronome/src/data/models/bar.dart';
 import 'package:flutter_metronome/src/ui/note_value_switcher_modal.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class NoteValueSwitcher extends StatelessWidget {
   final Function(NoteValue) onChangeNoteValue;
@@ -30,9 +28,14 @@ class NoteValueSwitcher extends StatelessWidget {
           ),
         ),
         child: SizedBox(
-      height: 24,
-      width: 24,
-      child: SvgPicture.asset('assets/icons/${state.iconName()}.svg', color: Colors.white),
+          height: 24,
+          width: 24,
+          child: SvgPicture.asset(
+            'images/${state.iconName()}.svg',
+            package: 'flutter_metronome',
+            color: Colors.white,
+          ),
+        ),
       ),
     );
   }

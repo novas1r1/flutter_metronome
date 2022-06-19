@@ -4,8 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_metronome/src/data/models/bar.dart';
 import 'package:soundpool/soundpool.dart';
 
-const SOUND_METRONOME_ELECTRIC = 'assets/sounds/metronome_electric.wav';
-const SOUND_METRONOME_ELECTRIC_UP = 'assets/sounds/metronome_electric_up.wav';
+const SOUND_METRONOME_ELECTRIC = 'assets/metronome_electric.wav';
+const SOUND_METRONOME_ELECTRIC_UP = 'assets/metronome_electric_up.wav';
 
 class MetronomeRepository {
   late final Soundpool _soundpool;

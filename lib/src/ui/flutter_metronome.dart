@@ -1,52 +1,59 @@
-import 'package:drumbitious_mvp/core/configs/config.dart';
-import 'package:drumbitious_mvp/core/ui/ui.dart';
-import 'package:drumbitious_mvp/core/utils/analytics.dart';
-import 'package:drumbitious_mvp/core/widgets/buttons/round_button.dart';
-import 'package:drumbitious_mvp/core/widgets/metronome/metronome.dart';
-import 'package:drumbitious_mvp/data/models/bar.dart';
-import 'package:drumbitious_mvp/data/repositories/audio_player_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_metronome/src/cubits/metronome_cubit.dart';
+import 'package:flutter_metronome/src/data/models/bar.dart';
+import 'package:flutter_metronome/src/data/repositories/metronome_repository.dart';
+import 'package:flutter_metronome/src/ui/bar_switcher.dart';
+import 'package:flutter_metronome/src/ui/note_value_switcher.dart';
+import 'package:flutter_metronome/src/utils/metronome_config.dart';
 
-class MetronomeWidget extends StatelessWidget {
+class FlutterMetronome extends StatelessWidget {
   final int initialBpm;
   final Function(int) onChangeBpm;
+  final Color color;
 
-  const MetronomeWidget({
+  const FlutterMetronome({
     super.key,
     required this.initialBpm,
     required this.onChangeBpm,
+    required this.color,
   });
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => MetronomeCubit(
-        audioPlayerRepository: context.read<AudioPlayerRepository>(),
-        initialBpm: initialBpm,
-      ),
-      child: _MetronomeView(
-        initialBpm: initialBpm,
-        onChangeBpm: onChangeBpm,
+    return RepositoryProvider(
+      create: (context) => MetronomeRepository(),
+      child: BlocProvider(
+        create: (context) => MetronomeCubit(
+          metronomeRepository: context.read<MetronomeRepository>(),
+          initialBpm: initialBpm,
+        ),
+        child: _FlutterMetronomeView(
+          initialBpm: initialBpm,
+          onChangeBpm: onChangeBpm,
+          color: color,
+        ),
       ),
     );
   }
 }
 
-class _MetronomeView extends StatefulWidget {
+class _FlutterMetronomeView extends StatefulWidget {
   final int initialBpm;
   final Function(int) onChangeBpm;
+  final Color color;
 
-  const _MetronomeView({
+  const _FlutterMetronomeView({
     required this.initialBpm,
     required this.onChangeBpm,
+    required this.color,
   });
 
   @override
-  State<_MetronomeView> createState() => _MetronomeViewState();
+  State<_FlutterMetronomeView> createState() => _FlutterMetronomeViewState();
 }
 
-class _MetronomeViewState extends State<_MetronomeView> {
+class _FlutterMetronomeViewState extends State<_FlutterMetronomeView> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<MetronomeCubit, MetronomeState>(
@@ -58,8 +65,8 @@ class _MetronomeViewState extends State<_MetronomeView> {
         clipBehavior: Clip.none,
         children: [
           Container(
-            padding: DrumbitiousSpacing.a8,
-            color: DrumbitiousColors.primaryColorDark,
+            padding: const EdgeInsets.all(8),
+            color: widget.color,
             child: Column(
               children: [
                 Row(
@@ -71,9 +78,8 @@ class _MetronomeViewState extends State<_MetronomeView> {
                         onChangeBar: (newBar) => _onChangeBar(newBar, context),
                       ),
                     ),
-                    RoundButton(
-                      size: 35,
-                      child: const Text('-', style: DrumbitiousStyles.h2),
+                    IconButton(
+                      icon: const Icon(Icons.remove),
                       onPressed: () =>
                           context.read<MetronomeCubit>().decreaseBpm(),
                     ),
@@ -86,22 +92,19 @@ class _MetronomeViewState extends State<_MetronomeView> {
                             selector: (state) => state.currentBpm,
                             builder: (context, state) => Text(
                               '$state',
-                              style: DrumbitiousStyles.h1,
                             ),
                           ),
                           const Text(
                             'BPM',
                             style: TextStyle(
-                              color: DrumbitiousColors.accentColor,
                               fontSize: 20,
                             ),
                           ),
                         ],
                       ),
                     ),
-                    RoundButton(
-                      size: 35,
-                      child: const Text('+', style: DrumbitiousStyles.h2),
+                    IconButton(
+                      icon: const Icon(Icons.add),
                       onPressed: () =>
                           context.read<MetronomeCubit>().increaseBpm(),
                     ),
@@ -122,11 +125,8 @@ class _MetronomeViewState extends State<_MetronomeView> {
                       child: BlocSelector<MetronomeCubit, MetronomeState, int>(
                         selector: (state) => state.currentBpm,
                         builder: (context, state) => Slider(
-                          activeColor: DrumbitiousColors.accentColor,
-                          inactiveColor: DrumbitiousColors.primaryColorLight,
-                          min: MIN_BPM.toDouble(),
-                          max: MAX_BPM.toDouble(),
-                          thumbColor: DrumbitiousColors.accentColor,
+                          min: MetronomeConfig.MIN_BPM.toDouble(),
+                          max: MetronomeConfig.MAX_BPM.toDouble(),
                           value: state.toDouble(),
                           onChanged: (newValue) =>
                               onChangeBpm(context, newValue),
@@ -144,12 +144,6 @@ class _MetronomeViewState extends State<_MetronomeView> {
   }
 
   void _onChangeBar(Bar newBar, BuildContext context) {
-    Analytics.logEvent(
-      name: AnalyticsEvent.changeMetronomeBarClicked,
-      parameters: {
-        'bar': '${newBar.noteCountPerBar}/${newBar.noteValue}',
-      },
-    );
     context.read<MetronomeCubit>().changeBar(newBar);
   }
 
@@ -165,10 +159,9 @@ class _MetronomePlayButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocSelector<MetronomeCubit, MetronomeState, MetronomeStatus>(
       selector: (state) => state.status,
-      builder: (context, state) => RoundButton(
-        size: 40,
+      builder: (context, state) => IconButton(
         onPressed: () => context.read<MetronomeCubit>().togglePlay(),
-        child: Icon(
+        icon: Icon(
           state == MetronomeStatus.paused
               ? Icons.play_arrow_rounded
               : Icons.pause_rounded,

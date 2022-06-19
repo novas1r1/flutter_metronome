@@ -26,9 +26,16 @@ class MetronomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Metronome Test'),
-        ),
-        body: const FlutterMetronome());
+      appBar: AppBar(
+        title: const Text('Metronome Test'),
+      ),
+      body: FlutterMetronome(
+        color: Colors.blueGrey,
+        initialBpm: MetronomeConfig.DEFAULT_BPM,
+        onChangeBpm: (int bpm) {
+          print('bpm: $bpm');
+        },
+      ),
+    );
   }
 }

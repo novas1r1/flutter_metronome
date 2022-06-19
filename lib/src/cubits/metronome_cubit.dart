@@ -28,7 +28,7 @@ class MetronomeCubit extends Cubit<MetronomeState> {
             currentSubdivision: initialSubdivision,
           ),
         ) {
-    // metronomeRepository.initializeMetronome();
+    metronomeRepository.initializeMetronome();
   }
 
   Timer? _timer;

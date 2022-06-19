@@ -20,6 +20,11 @@ dev_dependencies:
   very_good_analysis: ^3.0.1
 
 flutter:
+  uses-material-design: true
   assets:
-    - assets/sounds/
-    - assets/images/
+    - packages/flutter_metronome/assets/metronome_electric_up.wav
+    - packages/flutter_metronome/assets/metronome_electric.wav
+    - packages/flutter_metronome/images/ic_note_eight.svg
+    - packages/flutter_metronome/images/ic_note_quarter.svg
+    - packages/flutter_metronome/images/ic_note_sixteenth.svg
+    - packages/flutter_metronome/images/ic_note_triplet.svg
