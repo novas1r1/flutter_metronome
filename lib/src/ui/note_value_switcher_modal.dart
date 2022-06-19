@@ -57,7 +57,7 @@ class _NoteValueSwitcherModalState extends State<NoteValueSwitcherModal> {
                       child: Padding(
                         padding: const EdgeInsets.all(8),
                         child: SvgPicture.asset(
-                          'images/${_noteValues[index].iconName()}.svg',
+                          'assets/images/${_noteValues[index].iconName()}.svg',
                           package: 'flutter_metronome',
                           color: Colors.black,
                         ),

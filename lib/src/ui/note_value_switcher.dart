@@ -31,7 +31,7 @@ class NoteValueSwitcher extends StatelessWidget {
           height: 24,
           width: 24,
           child: SvgPicture.asset(
-            'images/${state.iconName()}.svg',
+            'assets/images/${state.iconName()}.svg',
             package: 'flutter_metronome',
             color: Colors.black,
           ),

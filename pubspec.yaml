@@ -22,9 +22,9 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - packages/flutter_metronome/assets/metronome_electric_up.wav
-    - packages/flutter_metronome/assets/metronome_electric.wav
-    - packages/flutter_metronome/images/ic_note_eight.svg
-    - packages/flutter_metronome/images/ic_note_quarter.svg
-    - packages/flutter_metronome/images/ic_note_sixteenth.svg
-    - packages/flutter_metronome/images/ic_note_triplet.svg
+    - packages/flutter_metronome/assets/sounds/default_metronome_up.wav
+    - packages/flutter_metronome/assets/sounds/default_metronome.wav
+    - packages/flutter_metronome/assets/images/ic_note_eight.svg
+    - packages/flutter_metronome/assets/images/ic_note_quarter.svg
+    - packages/flutter_metronome/assets/images/ic_note_sixteenth.svg
+    - packages/flutter_metronome/assets/images/ic_note_triplet.svg
