@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_metronome/src/data/models/bar.dart';
+import 'package:flutter_metronome/src/utils/metronome_config.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class NoteValueSwitcherModal extends StatefulWidget {
-  final Function(NoteValue) onCloseDialog;
+  final void Function(NoteValue) onCloseDialog;
   final NoteValue? initialNoteValue;
 
   const NoteValueSwitcherModal({
@@ -17,20 +18,13 @@ class NoteValueSwitcherModal extends StatefulWidget {
 }
 
 class _NoteValueSwitcherModalState extends State<NoteValueSwitcherModal> {
-  late List<NoteValue> _noteValues;
-
   late NoteValue _currentNoteValue;
+  late List<NoteValue> _noteValues;
 
   @override
   void initState() {
     super.initState();
-
-    _noteValues = [
-      NoteValue.quarter,
-      NoteValue.eighth,
-      NoteValue.triplet,
-      NoteValue.sixteenth,
-    ];
+    _noteValues = MetronomeConfig.AVAILABLE_NOTE_VALUES;
 
     _currentNoteValue = widget.initialNoteValue ?? _noteValues.first;
   }
@@ -56,15 +50,16 @@ class _NoteValueSwitcherModalState extends State<NoteValueSwitcherModal> {
                   child: Center(
                     child: Container(
                       padding: const EdgeInsets.all(4),
-                      color: _currentNoteValue == _noteValues[index]
-                          ? Colors.blue.shade500
-                          : Colors.blue.shade900,
+                      color: _currentNoteValue ==
+                              MetronomeConfig.AVAILABLE_NOTE_VALUES[index]
+                          ? Colors.primaries.first
+                          : Colors.white,
                       child: Padding(
                         padding: const EdgeInsets.all(8),
                         child: SvgPicture.asset(
                           'images/${_noteValues[index].iconName()}.svg',
                           package: 'flutter_metronome',
-                          color: Colors.white,
+                          color: Colors.black,
                         ),
                       ),
                     ),

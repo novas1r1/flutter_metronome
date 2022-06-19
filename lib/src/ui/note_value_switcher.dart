@@ -21,7 +21,7 @@ class NoteValueSwitcher extends StatelessWidget {
             minHeight: MediaQuery.of(context).size.height * 0.5,
           ),
           context: context,
-          backgroundColor: Colors.transparent,
+          backgroundColor: Colors.white,
           builder: (context) => NoteValueSwitcherModal(
             initialNoteValue: state,
             onCloseDialog: onChangeNoteValue,
@@ -33,7 +33,7 @@ class NoteValueSwitcher extends StatelessWidget {
           child: SvgPicture.asset(
             'images/${state.iconName()}.svg',
             package: 'flutter_metronome',
-            color: Colors.white,
+            color: Colors.black,
           ),
         ),
       ),

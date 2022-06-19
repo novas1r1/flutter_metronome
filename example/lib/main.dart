@@ -30,8 +30,9 @@ class MetronomePage extends StatelessWidget {
         title: const Text('Metronome Test'),
       ),
       body: FlutterMetronome(
-        color: Colors.blueGrey,
-        initialBpm: MetronomeConfig.DEFAULT_BPM,
+        initialBpm: 120,
+        minBpm: 0,
+        maxBpm: 200,
         onChangeBpm: (int bpm) {
           print('bpm: $bpm');
         },

@@ -25,4 +25,12 @@ class MetronomeConfig {
     Bar(noteCountPerBar: 9, noteValue: NoteValue.eighth),
     Bar(noteCountPerBar: 12, noteValue: NoteValue.eighth),
   ];
+
+  /// Currently supported note values
+  static const AVAILABLE_NOTE_VALUES = <NoteValue>[
+    NoteValue.quarter,
+    NoteValue.eighth,
+    NoteValue.triplet,
+    NoteValue.sixteenth,
+  ];
 }

@@ -1,8 +1,8 @@
 enum NoteValue {
   // 1
-  whole,
+  // whole,
   // 1/2
-  half,
+  // half,
   // 1/3
   triplet,
   // 1/4
@@ -11,10 +11,12 @@ enum NoteValue {
   eighth,
   // 1/16
   sixteenth,
+  // TODO: not yet supported
   // 1/32
-  thirtySecondNote,
+  // thirtySecondNote,
+  // TODO: not yet supported
   // 1/64
-  sixtyFourthNote,
+  // sixtyFourthNote,
 }
 
 class Bar {
@@ -43,10 +45,12 @@ class Bar {
 extension NoteValueParser on NoteValue {
   int asInt() {
     switch (this) {
-      case NoteValue.whole:
-        return 1;
-      case NoteValue.half:
-        return 2;
+      // TODO: not yet supported
+      // case NoteValue.whole:
+      //   return 1;
+      // TODO: not yet supported
+      // case NoteValue.half:
+      //   return 2;
       case NoteValue.triplet:
         return 3;
       case NoteValue.quarter:
@@ -55,19 +59,23 @@ extension NoteValueParser on NoteValue {
         return 8;
       case NoteValue.sixteenth:
         return 16;
-      case NoteValue.thirtySecondNote:
-        return 32;
-      case NoteValue.sixtyFourthNote:
-        return 64;
+      // TODO: not yet supported
+      // case NoteValue.thirtySecondNote:
+      //   return 32;
+      // TODO: not yet supported
+      // case NoteValue.sixtyFourthNote:
+      //   return 64;
     }
   }
 
   String iconName() {
     switch (this) {
-      case NoteValue.whole:
-        return 'ic_note_whole';
-      case NoteValue.half:
-        return 'ic_note_half';
+      // TODO: not yet supported
+      // case NoteValue.whole:
+      //   return 'ic_note_whole';
+      // TODO: not yet supported
+      // case NoteValue.half:
+      //   return 'ic_note_half';
       case NoteValue.triplet:
         return 'ic_note_triplet';
       case NoteValue.quarter:
@@ -76,10 +84,12 @@ extension NoteValueParser on NoteValue {
         return 'ic_note_eight';
       case NoteValue.sixteenth:
         return 'ic_note_sixteenth';
-      case NoteValue.thirtySecondNote:
-        return 'ic_note_thirtySecondNote';
-      case NoteValue.sixtyFourthNote:
-        return 'ic_note_sixtyFourthNote';
+      // TODO: not yet supported
+      // case NoteValue.thirtySecondNote:
+      //   return 'ic_note_thirtySecondNote';
+      // TODO: not yet supported
+      // case NoteValue.sixtyFourthNote:
+      //   return 'ic_note_sixtyFourthNote';
     }
   }
 }

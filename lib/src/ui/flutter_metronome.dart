@@ -8,15 +8,30 @@ import 'package:flutter_metronome/src/ui/note_value_switcher.dart';
 import 'package:flutter_metronome/src/utils/metronome_config.dart';
 
 class FlutterMetronome extends StatelessWidget {
+  /// Initial BPM displayed by the metronome, defaults to 120
   final int initialBpm;
-  final void Function(int) onChangeBpm;
-  final Color color;
+
+  /// Maximum BPM allowed by the metronome, defaults to 240
+  final int maxBpm;
+
+  /// Minimum BPM allowed by the metronome, defaults to 0
+  final int minBpm;
+
+  /// If bpm was changed by the widget, this callback will be called
+  final void Function(int)? onChangeBpm;
+
+  /// Initial bar is displayed by the metronome,
+  /// defaults to Bar(noteCountPerBar: 4, noteValue: NoteValue.quarter)
+  final Bar initialBar;
 
   const FlutterMetronome({
     super.key,
-    required this.initialBpm,
-    required this.onChangeBpm,
-    required this.color,
+    this.initialBpm = MetronomeConfig.DEFAULT_BPM,
+    this.maxBpm = MetronomeConfig.MAX_BPM,
+    this.minBpm = MetronomeConfig.MIN_BPM,
+    this.initialBar =
+        const Bar(noteValue: NoteValue.quarter, noteCountPerBar: 4),
+    this.onChangeBpm,
   });
 
   @override
@@ -26,47 +41,36 @@ class FlutterMetronome extends StatelessWidget {
       child: BlocProvider(
         create: (context) => MetronomeCubit(
           metronomeRepository: context.read<MetronomeRepository>(),
+          initialBar: initialBar,
           initialBpm: initialBpm,
+          maxBpm: maxBpm,
+          minBpm: minBpm,
         ),
         child: _FlutterMetronomeView(
-          initialBpm: initialBpm,
           onChangeBpm: onChangeBpm,
-          color: color,
         ),
       ),
     );
   }
 }
 
-class _FlutterMetronomeView extends StatefulWidget {
-  final int initialBpm;
-  final void Function(int) onChangeBpm;
-  final Color color;
+class _FlutterMetronomeView extends StatelessWidget {
+  final void Function(int)? onChangeBpm;
 
-  const _FlutterMetronomeView({
-    required this.initialBpm,
-    required this.onChangeBpm,
-    required this.color,
-  });
+  const _FlutterMetronomeView({this.onChangeBpm});
 
-  @override
-  State<_FlutterMetronomeView> createState() => _FlutterMetronomeViewState();
-}
-
-class _FlutterMetronomeViewState extends State<_FlutterMetronomeView> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<MetronomeCubit, MetronomeState>(
       listenWhen: (previous, current) =>
           previous.currentBpm != current.currentBpm,
-      listener: (context, state) => widget.onChangeBpm(state.currentBpm),
+      listener: (context, state) => onChangeBpm?.call(state.currentBpm),
       child: Stack(
         alignment: Alignment.center,
         clipBehavior: Clip.none,
         children: [
           Container(
             padding: const EdgeInsets.all(8),
-            color: widget.color,
             child: Column(
               children: [
                 Row(
@@ -90,15 +94,11 @@ class _FlutterMetronomeViewState extends State<_FlutterMetronomeView> {
                         children: [
                           BlocSelector<MetronomeCubit, MetronomeState, int>(
                             selector: (state) => state.currentBpm,
-                            builder: (context, state) => Text(
-                              '$state',
-                            ),
+                            builder: (context, state) => Text('$state'),
                           ),
                           const Text(
                             'BPM',
-                            style: TextStyle(
-                              fontSize: 20,
-                            ),
+                            style: TextStyle(fontSize: 20),
                           ),
                         ],
                       ),
@@ -129,7 +129,7 @@ class _FlutterMetronomeViewState extends State<_FlutterMetronomeView> {
                           max: MetronomeConfig.MAX_BPM.toDouble(),
                           value: state.toDouble(),
                           onChanged: (newValue) =>
-                              onChangeBpm(context, newValue),
+                              _onChangeBpm(context, newValue),
                         ),
                       ),
                     ),
@@ -147,7 +147,7 @@ class _FlutterMetronomeViewState extends State<_FlutterMetronomeView> {
     context.read<MetronomeCubit>().changeBar(newBar);
   }
 
-  void onChangeBpm(BuildContext context, double newValue) {
+  void _onChangeBpm(BuildContext context, double newValue) {
     context.read<MetronomeCubit>().setBpm(newValue.toInt());
   }
 }

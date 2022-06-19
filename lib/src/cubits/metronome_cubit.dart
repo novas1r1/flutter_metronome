@@ -9,17 +9,20 @@ import 'package:flutter_metronome/src/utils/metronome_config.dart';
 part 'metronome_state.dart';
 
 class MetronomeCubit extends Cubit<MetronomeState> {
-  final MetronomeRepository metronomeRepository;
   final int initialBpm;
+  final int minBpm;
+  final int maxBpm;
   final Bar initialBar;
   final NoteValue initialSubdivision;
+  final MetronomeRepository metronomeRepository;
 
   MetronomeCubit({
-    this.initialBar =
-        const Bar(noteValue: NoteValue.quarter, noteCountPerBar: 4),
+    required this.metronomeRepository,
+    required this.initialBar,
     required this.initialBpm,
     this.initialSubdivision = NoteValue.quarter,
-    required this.metronomeRepository,
+    this.minBpm = MetronomeConfig.MIN_BPM,
+    this.maxBpm = MetronomeConfig.MAX_BPM,
   }) : super(
           MetronomeState(
             initialBpm: initialBpm,
@@ -33,61 +36,103 @@ class MetronomeCubit extends Cubit<MetronomeState> {
 
   Timer? _timer;
 
+  /// Increases the currentBpm by a given amount (default=1)
+  /// Stops metronome before doing so.
+  /// emits [MetronomeStatus.paused] and returns maxBpm if it cant be increased
+  /// emits [MetronomeStatus.paused] and returns currentBpm+amount
+  /// if it can be increased
   void increaseBpm({int step = 1}) {
-    _stop();
+    _stopMetronome();
 
-    if (state.currentBpm + step > MetronomeConfig.MAX_BPM) {
+    final updatedBpm = state.currentBpm + step;
+
+    if (updatedBpm > maxBpm) {
       emit(
         state.copyWith(
           status: MetronomeStatus.paused,
-          currentBpm: MetronomeConfig.MAX_BPM,
+          currentBpm: maxBpm,
         ),
       );
     } else {
       emit(
         state.copyWith(
           status: MetronomeStatus.paused,
-          currentBpm: state.currentBpm + step,
+          currentBpm: updatedBpm,
         ),
       );
     }
   }
 
+  /// Decreases the currentBpm by a given amount (default=1)
+  /// Stops metronome before doing so.
+  /// emits [MetronomeStatus.paused] and returns minBpm if it cant be increased
+  /// emits [MetronomeStatus.paused] and returns currentBpm-amount
+  /// if it can be increased
   void decreaseBpm({int step = 1}) {
-    _stop();
-    if (state.currentBpm >= step) {
+    _stopMetronome();
+
+    final updatedBpm = state.currentBpm - step;
+
+    if (state.currentBpm >= step && updatedBpm >= minBpm) {
       emit(
         state.copyWith(
           status: MetronomeStatus.paused,
-          currentBpm: state.currentBpm - step,
+          currentBpm: updatedBpm,
         ),
       );
     } else {
       emit(
         state.copyWith(
           status: MetronomeStatus.paused,
-          currentBpm: 0,
+          currentBpm: minBpm,
         ),
       );
     }
   }
 
+  /// Sets a specific value to the metronome
+  /// If value is greater than maxBpm, it will be set to maxBpm
+  /// If value is less than minBpm, it will be set to minBpm
+  /// emits [MetronomeStatus.paused] and returns value
   void setBpm(int newBpm) {
-    _stop();
+    _stopMetronome();
 
-    emit(
-      state.copyWith(status: MetronomeStatus.paused, currentBpm: newBpm),
-    );
+    if (newBpm >= maxBpm) {
+      emit(
+        state.copyWith(
+          status: MetronomeStatus.paused,
+          currentBpm: maxBpm,
+        ),
+      );
+    } else if (newBpm <= minBpm) {
+      emit(
+        state.copyWith(
+          status: MetronomeStatus.paused,
+          currentBpm: minBpm,
+        ),
+      );
+    } else {
+      emit(
+        state.copyWith(
+          status: MetronomeStatus.paused,
+          currentBpm: newBpm,
+        ),
+      );
+    }
   }
 
+  /// Changes the current bar and pauses the metronome
+  /// emits [MetronomeStatus.paused]
   void changeBar(Bar newBar) {
-    _stop();
+    _stopMetronome();
 
     emit(state.copyWith(status: MetronomeStatus.paused, currentBar: newBar));
   }
 
+  /// Changes the current subdivision and pauses the metronome
+  /// emits [MetronomeStatus.paused]
   void changeSubdivision(NoteValue newValue) {
-    _stop();
+    _stopMetronome();
 
     emit(
       state.copyWith(
@@ -97,29 +142,33 @@ class MetronomeCubit extends Cubit<MetronomeState> {
     );
   }
 
-  void _stop() {
-    _timer?.cancel();
-  }
-
-  // 120 bpm = 60/120 = tick every 0.5 seconds = 0.5 * 1000 = 500 ms
-  // 60 bpm = 60/60 = tick every 1 second = 1 * 1000 = 1000 ms
+  /// Starts the metronome if bpm is not 0
+  /// e.g. 120 bpm = 60/120 = tick every 0.5 seconds = 0.5 * 1000 = 500 ms
+  /// e.g. 60 bpm = 60/60 = tick every 1 second = 1 * 1000 = 1000 ms
+  /// emits [MetronomeStatus.paused] if metronome is already running
+  /// also stops the metronome
+  /// emits [MetronomeStatus.playing] if metronome is not running
+  /// also starts the metronome
   void togglePlay() {
-    if (state.currentBpm == 0) {
-      return;
-    }
+    if (state.currentBpm == 0) return;
 
     if (state.status == MetronomeStatus.playing) {
-      emit(state.copyWith(status: MetronomeStatus.paused));
-      _stop();
-    } else {
-      emit(state.copyWith(status: MetronomeStatus.playing));
+      _stopMetronome();
 
+      emit(state.copyWith(status: MetronomeStatus.paused));
+    } else {
       _timer = metronomeRepository.generateTimer(
         bar: state.currentBar,
         bpm: state.currentBpm,
         subdivision: state.currentSubdivision,
       );
+
+      emit(state.copyWith(status: MetronomeStatus.playing));
     }
+  }
+
+  void _stopMetronome() {
+    _timer?.cancel();
   }
 
   @override

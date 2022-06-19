@@ -13,3 +13,4 @@ A Metronome built in Flutter
 # TODO
 - make sound files replacable
 - remove flutter_svg from packages
+- 

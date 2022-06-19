@@ -10,8 +10,8 @@ const SOUND_METRONOME_ELECTRIC_UP = 'assets/metronome_electric_up.wav';
 class MetronomeRepository {
   late final Soundpool _soundpool;
 
-  late int metronomeId;
-  late int metronomeUpId;
+  late final int _metronomeId;
+  late final int _metronomeUpId;
 
   MetronomeRepository({
     Soundpool? soundpool,
@@ -21,16 +21,17 @@ class MetronomeRepository {
             );
 
   Future<void> initializeMetronome() async {
-    metronomeId =
+    _metronomeId =
         await rootBundle.load(SOUND_METRONOME_ELECTRIC).then(_soundpool.load);
-    metronomeUpId = await rootBundle
+
+    _metronomeUpId = await rootBundle
         .load(SOUND_METRONOME_ELECTRIC_UP)
         .then(_soundpool.load);
   }
 
-  Future<int> playMetronomeSound() async => _soundpool.play(metronomeId);
+  Future<int> playMetronomeSound() async => _soundpool.play(_metronomeId);
 
-  Future<int> playMetronomeUpSound() async => _soundpool.play(metronomeUpId);
+  Future<int> playMetronomeUpSound() async => _soundpool.play(_metronomeUpId);
 
   Timer generateTimer({
     required Bar bar,
@@ -39,25 +40,25 @@ class MetronomeRepository {
   }) {
     final tickRate = _generateTickRate(subdivision, bpm);
 
-    var needsTick = true;
-    var millisLastTick = DateTime.now().microsecondsSinceEpoch;
-
     var ticksOverall = 0;
 
     final noUpNoteCount =
         _generateNoUpNoteCount(subdivision, bar.noteCountPerBar);
 
+    var needsTick = true;
+    var millisLastTick = DateTime.now().millisecondsSinceEpoch;
+
     return Timer.periodic(
       const Duration(microseconds: 500),
       (timer) async {
-        final now = DateTime.now().microsecondsSinceEpoch;
+        final now = DateTime.now().millisecondsSinceEpoch;
         final duration = now - millisLastTick;
 
         if (duration >= tickRate && needsTick) {
           if (ticksOverall % noUpNoteCount == 0) {
-            await playMetronomeUpSound();
+            unawaited(playMetronomeUpSound());
           } else {
-            await playMetronomeSound();
+            unawaited(playMetronomeSound());
           }
 
           millisLastTick = now;
@@ -77,26 +78,29 @@ class MetronomeRepository {
   int _generateTickRate(NoteValue subdivision, int bpm) {
     const seconds = 60;
     const milliSeconds = seconds * 1000;
-    const microSeconds = milliSeconds * 1000;
 
     int tickRate;
 
     switch (subdivision) {
       case NoteValue.eighth:
-        tickRate = (microSeconds / bpm / 2).round();
+        tickRate = (milliSeconds / bpm / 2).round();
         break;
       case NoteValue.triplet:
-        tickRate = (microSeconds / bpm / 3).round();
+        tickRate = (milliSeconds / bpm / 3).round();
         break;
       case NoteValue.sixteenth:
-        tickRate = (microSeconds / bpm / 4).round();
+        tickRate = (milliSeconds / bpm / 4).round();
         break;
-      case NoteValue.whole:
-      case NoteValue.half:
-      case NoteValue.thirtySecondNote:
-      case NoteValue.sixtyFourthNote:
+      // TODO: not yet supported
+      // case NoteValue.whole:
+      // TODO: not yet supported
+      // case NoteValue.half:
+      // TODO: not yet supported
+      // case NoteValue.thirtySecondNote:
+      // TODO: not yet supported
+      // case NoteValue.sixtyFourthNote:
       case NoteValue.quarter:
-        tickRate = (microSeconds / bpm).round();
+        tickRate = (milliSeconds / bpm).round();
         break;
     }
 
@@ -119,10 +123,14 @@ class MetronomeRepository {
       case NoteValue.sixteenth:
         noUpNoteCount = noteCountPerBar * 4;
         break;
-      case NoteValue.whole:
-      case NoteValue.half:
-      case NoteValue.thirtySecondNote:
-      case NoteValue.sixtyFourthNote:
+      // TODO: not yet supported
+      // case NoteValue.whole:
+      // TODO: not yet supported
+      // case NoteValue.half:
+      // TODO: not yet supported
+      // case NoteValue.thirtySecondNote:
+      // TODO: not yet supported
+      // case NoteValue.sixtyFourthNote:
       case NoteValue.quarter:
         break;
     }
