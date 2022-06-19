@@ -47,6 +47,8 @@ class FlutterMetronome extends StatelessWidget {
           minBpm: minBpm,
         ),
         child: _FlutterMetronomeView(
+          minBpm: minBpm,
+          maxBpm: maxBpm,
           onChangeBpm: onChangeBpm,
         ),
       ),
@@ -55,9 +57,16 @@ class FlutterMetronome extends StatelessWidget {
 }
 
 class _FlutterMetronomeView extends StatelessWidget {
+  final int minBpm;
+  final int maxBpm;
+
   final void Function(int)? onChangeBpm;
 
-  const _FlutterMetronomeView({this.onChangeBpm});
+  const _FlutterMetronomeView({
+    this.onChangeBpm,
+    required this.minBpm,
+    required this.maxBpm,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -125,8 +134,8 @@ class _FlutterMetronomeView extends StatelessWidget {
                       child: BlocSelector<MetronomeCubit, MetronomeState, int>(
                         selector: (state) => state.currentBpm,
                         builder: (context, state) => Slider(
-                          min: MetronomeConfig.MIN_BPM.toDouble(),
-                          max: MetronomeConfig.MAX_BPM.toDouble(),
+                          min: minBpm.toDouble(),
+                          max: maxBpm.toDouble(),
                           value: state.toDouble(),
                           onChanged: (newValue) =>
                               _onChangeBpm(context, newValue),
