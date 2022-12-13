@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_metronome/flutter_metronome.dart';
 
-import 'ffi.dart' show api;
-
 void main() {
   runApp(const MyApp());
 }
@@ -33,7 +31,7 @@ class _MetronomePageState extends State<MetronomePage> {
   @override
   void initState() {
     super.initState();
-    api.main();
+    // api.main();
   }
 
   @override
