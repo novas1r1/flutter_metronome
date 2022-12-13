@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_metronome/flutter_metronome.dart';
 
+import 'ffi.dart' show api;
+
 void main() {
   runApp(const MyApp());
 }
@@ -20,8 +22,19 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MetronomePage extends StatelessWidget {
+class MetronomePage extends StatefulWidget {
   const MetronomePage({super.key});
+
+  @override
+  State<MetronomePage> createState() => _MetronomePageState();
+}
+
+class _MetronomePageState extends State<MetronomePage> {
+  @override
+  void initState() {
+    super.initState();
+    api.main();
+  }
 
   @override
   Widget build(BuildContext context) {
