@@ -27,11 +27,15 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  ffi: ^2.0.1
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.1
   flutter_metronome:
     path: ../
+  flutter_rust_bridge: ^1.54.0
+  # maybe not needed?
+  freezed_annotation: ^2.2.0
 
 dev_dependencies:
   # The "flutter_lints" package below contains a set of recommended lints to
@@ -39,9 +43,14 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
+  # maybe not needed?
+  build_runner: ^2.3.2
+  ffigen: ^7.2.3
   flutter_lints: ^2.0.1
   flutter_test:
     sdk: flutter
+  # maybe not needed?
+  freezed: ^2.3.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
